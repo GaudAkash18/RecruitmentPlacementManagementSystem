@@ -1,0 +1,10 @@
+USE recruitment_placement;
+SELECT primary_technology,COUNT(*) total FROM candidates GROUP BY primary_technology;
+SELECT c.company_name,j.job_title,j.openings,j.location FROM jobs j JOIN companies c ON c.company_id=j.company_id WHERE j.status='OPEN';
+SELECT application_status,COUNT(*) total FROM applications GROUP BY application_status;
+SELECT c.company_name,COUNT(p.placement_id) placed_count FROM placements p JOIN companies c ON c.company_id=p.company_id WHERE p.joining_status='JOINED' GROUP BY c.company_id,c.company_name ORDER BY placed_count DESC;
+SELECT ca.primary_technology,COUNT(*) placed_count FROM placements p JOIN candidates ca ON ca.candidate_id=p.candidate_id WHERE p.joining_status='JOINED' GROUP BY ca.primary_technology;
+SELECT u.full_name,COUNT(a.application_id) applications FROM applications a LEFT JOIN users u ON u.user_id=a.assigned_recruiter_id GROUP BY u.user_id,u.full_name;
+SELECT i.* FROM interview_rounds i WHERE i.status='SCHEDULED';
+SELECT COUNT(DISTINCT o.offer_id) offers,COUNT(DISTINCT p.placement_id) joined,ROUND(100*COUNT(DISTINCT p.placement_id)/NULLIF(COUNT(DISTINCT o.offer_id),0),2) conversion_percent FROM offers o LEFT JOIN placements p ON p.offer_id=o.offer_id AND p.joining_status='JOINED';
+SELECT job_code,job_title,DATEDIFF(CURDATE(),posted_date) age_days FROM jobs WHERE status='OPEN';
